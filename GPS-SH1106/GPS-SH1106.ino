@@ -6,36 +6,40 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH1106.h>
 #include <analogWrite.h>
-#include <Bounce.h>
-
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64 // OLED display height, in pixels
-
+#include <Bounce.h>/按鈕
+#include <math.h>//溫度
+//OLED
 #define OLED_MOSI  23
 #define OLED_CLK   18
 #define OLED_DC    4
 #define OLED_CS    15
 #define OLED_RESET 5
-Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-//GPS  
-//static const int RXPin = 4, TXPin = 3;//GPS TX-->4 RX-->3
-//static const uint32_t GPSBaud = 9600;//與GPS包綠
+Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS); 
+//GPS:RX-->GPIO17 TX-->GPIO16
 TinyGPSPlus gps;
-//PM:RX-->GPIO17 TX-->GPIO16
-const int bt1 =34;
-Bounce bts1=Bounce(34, 50);
-int btany=0;
+const int bt1 =36;
+Bounce bts1=Bounce(36, 50);
+//LED
+int led[] ={25,26,27,12,13};
+//溫度
+unsigned int Rs = 10000;
+double Vcc = 3.3;
+int tp;
 void setup()
 {
   Serial.begin(115200);
   Serial2.begin(9600);
+  for(int x=0;x<=4;x++){
+  pinMode(led[x], OUTPUT);
+  }
   pinMode(bt1,INPUT);
   display.begin(SH1106_SWITCHCAPVCC);
   display.clearDisplay();
   display.setTextSize(3);             
   display.setTextColor(WHITE);       
-  display.setCursor(25,20);            
+  display.setCursor(25,0);            
   display.println("Hello");
+  display.println("CHEN");
   display.display();
   delay(1500);
 }
@@ -48,6 +52,8 @@ void loop()
   {
     Serial.println(F("No GPS detected: check wiring."));
     while(true);
-  }
+  }  
   OLED();
+  LED();
+  T();
 }

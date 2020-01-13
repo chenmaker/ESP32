@@ -3,13 +3,22 @@ void displayInfo()
   Serial.print(F("Location: ")); 
   if (gps.location.isValid())
   {
-    Serial.print(gps.location.lat(), 6);
+    Serial.print(gps.location.lat(),6);
     Serial.print(F(","));
-    Serial.print(gps.location.lng(), 6);
+    Serial.print(gps.location.lng(),6);
+    Serial.print(F(","));
+    Serial.print(gps.location.lat(),4);
+    Serial.print(F(","));
+    Serial.print(gps.location.lng(),4);
   }
   else
   {
-    Serial.print(F("INVALID"));
+  Serial.print(F("INVALID"));
+  /*display.setTextSize(3);             
+  display.setTextColor(WHITE);       
+  display.setCursor(10,40);            
+  display.println("......");
+  display.display();*/
   }
 
   Serial.print(F("  Date/Time: "));
